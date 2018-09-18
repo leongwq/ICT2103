@@ -5,11 +5,13 @@ const cors = require('cors');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const helmet = require('helmet');
 
 // Set up passport local strategy 
 require('./config/passport');
 
 app.use(cors());
+app.use(helmet());
 app.use(passport.initialize());
 
 // Log requests to the console.
