@@ -9,10 +9,17 @@ userService.addUser = async (req, res) => {
     let conn;
     const salt = crypto.randomBytes(16).toString('hex');
     const hash = crypto.pbkdf2Sync(req.body.password, salt, 1000, 64, 'sha512').toString('hex');
+
+    // Validation 
+    // req.checkBody('name', 'Name is required').notEmpty();
+    // req.checkBody('email', 'Email is required').notEmpty();
+
+    // const errors = req.validationErrors();
+
     try {
         conn = await db.getConnection();
-        const data = await conn.query("INSERT INTO users (name, email, phone, age, gender, salt, password) value (?,?,?,?,?,?,?)", 
-        [req.body.name, req.body.email, req.body.phone, req.body.age, req.body.gender, salt, hash]);
+        const data = await conn.query("INSERT INTO users (name, email, contact_no, dob, gender, salt, password) value (?,?,?,?,?,?,?)", 
+        [req.body.name, req.body.email, req.body.contact_no, req.body.dob, req.body.gender, salt, hash]);
         const token = generateJWT(data.insertId, req.body.email, req.body.name);
         res.status(200);
         res.json({
@@ -30,7 +37,6 @@ userService.login = async (req, res) => {
     passport.authenticate('local', function (err, user, info) {
         // If Passport throws/catches an error
         if (err) {
-            console.log(err);
             res.status(404).json(err);
             return;
         }

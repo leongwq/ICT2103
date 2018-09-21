@@ -6,10 +6,12 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const helmet = require('helmet');
+const expressValidator = require('express-validator');
 
 // Set up passport local strategy 
 require('./config/passport');
 
+app.use(expressValidator());
 app.use(cors());
 app.use(helmet());
 app.use(passport.initialize());
@@ -33,5 +35,5 @@ app.use(function (err, req, res, next) {
 
 // Turn on that server!
 app.listen(3200, () => {
-    console.log('Kleis listening on port 3200');
+    console.log('Pigu listening on port 3200');
   });
