@@ -18,8 +18,8 @@ userService.addUser = async (req, res) => {
 
     try {
         conn = await db.getConnection();
-        const data = await conn.query("INSERT INTO users (name, email, contact_no, dob, gender, salt, password) value (?,?,?,?,?,?,?)", 
-        [req.body.name, req.body.email, req.body.contact_no, req.body.dob, req.body.gender, salt, hash]);
+        const data = await conn.query("INSERT INTO users (name, email, contact_no, dob, gender, salt, password) value (?,?,?,?,?,?,?)",
+            [req.body.name, req.body.email, req.body.contact_no, req.body.dob, req.body.gender, salt, hash]);
         const token = generateJWT(data.insertId, req.body.email, req.body.name);
         res.status(200);
         res.json({
@@ -37,6 +37,7 @@ userService.login = async (req, res) => {
     passport.authenticate('local', function (err, user, info) {
         // If Passport throws/catches an error
         if (err) {
+            console.log(err);
             res.status(404).json(err);
             return;
         }

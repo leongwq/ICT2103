@@ -1,8 +1,7 @@
 const jwt = require('express-jwt');
 
 const auth = jwt({
-  secret: 'MY_SECRET',
-  userProperty: 'payload'
+  secret: process.env.JWT_SECRET,
 });
 
 module.exports = auth;
