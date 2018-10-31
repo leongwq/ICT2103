@@ -43,7 +43,7 @@ userService.login = async (req, res) => {
         }
         // If a user is found
         if (user) {
-            const token = generateJWT(user.id, user.email, user.name);
+            const token = generateJWT(user[0].id, user[0].email, user[0].name);
             res.status(200);
             res.json({
                 "token": token
