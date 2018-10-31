@@ -3,7 +3,6 @@ let preferenceService = {};
 const db = require('../connections/mariadb');
 
 preferenceService.addPreference = async (req, res) => {
-    console.log(req.payload);
     let conn;
     try {
         conn = await db.getConnection();
@@ -17,17 +16,17 @@ preferenceService.addPreference = async (req, res) => {
     }
 }
 
-// activityService.getActivityByID = async (req, res) => {
-//     let conn;
-//     try {
-//         conn = await db.getConnection();
-//         const data = await conn.query("SELECT * FROM activities WHERE id = (?)", [req.params.id]);
-//             res.status(200).send(data);
-//     } catch (err) {
-//         res.status(409).send(err);
-//     } finally {
-//         if (conn) return conn.end();
-//     }
-// }
+preferenceService.getPreferenceByID = async (req, res) => {
+    let conn;
+    try {
+        conn = await db.getConnection();
+        const data = await conn.query("SELECT * FROM trip_preference WHERE id = (?)", [req.params.id]);
+            res.status(200).send(data);
+    } catch (err) {
+        res.status(409).send(err);
+    } finally {
+        if (conn) return conn.end();
+    }
+}
 
 module.exports = preferenceService;
