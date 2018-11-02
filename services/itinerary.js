@@ -22,7 +22,7 @@ itineraryService.getItineraryByPreference = async (req, res) => {
     let conn;
     try {
         conn = await db.getConnection();
-        const data = await conn.query("SELECT * FROM itinerary WHERE preference = (?)", [req.params.id]);
+        const data = await conn.query("SELECT * FROM itinerary i INNER JOIN activities a ON i.activity = a.id WHERE preference = (?)", [req.params.id]);
             res.status(200).send(data);
     } catch (err) {
         console.log(err);
