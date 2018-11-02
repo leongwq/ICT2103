@@ -6,8 +6,8 @@ preferenceService.addPreference = async (req, res) => {
     let conn;
     try {
         conn = await db.getConnection();
-        const data = await conn.query("INSERT INTO trip_preference (userid, budget, meal_preference, meal_comments, type) value (?,?,?,?,?)",
-            [req.payload._id, req.body.budget, req.body.meal_preference, req.body.meal_comments, req.body.type]);
+        const data = await conn.query("INSERT INTO trip_preference (userid, budget, meal_preference, meal_comments, type, date) value (?,?,?,?,?,?)",
+            [req.payload._id, req.body.budget, req.body.meal_preference, req.body.meal_comments, req.body.type, req.body.date]);
             res.status(200).send(data);
     } catch (err) {
         res.status(409).send(err);
