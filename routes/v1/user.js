@@ -4,6 +4,6 @@ const auth = require('../../utils/jwtAuthenticator');
 
 router.post('/register', user.addUser);
 router.post('/login', user.login);
-router.get('/:id', auth, user.getUser);
+router.get('/user/:id', auth, user.getUser);
 
 module.exports = router;

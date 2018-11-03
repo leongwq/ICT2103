@@ -11,7 +11,6 @@ itineraryService.addItinerary = async (req, res) => {
             [req.body.activity, req.body.preference, req.body.order]);
             res.status(200).send(data);
     } catch (err) {
-        console.log(err);
         res.status(409).send(err);
     } finally {
         if (conn) return conn.end();
@@ -25,7 +24,47 @@ itineraryService.getItineraryByPreference = async (req, res) => {
         const data = await conn.query("SELECT * FROM itinerary i INNER JOIN activities a ON i.activity = a.id WHERE preference = (?)", [req.params.id]);
             res.status(200).send(data);
     } catch (err) {
-        console.log(err);
+        res.status(409).send(err);
+    } finally {
+        if (conn) return conn.end();
+    }
+}
+
+itineraryService.getTripHistory = async (req, res) => {
+    // SQL Statement to check trip preference before current date. Then return all
+    let conn;
+    try {
+        conn = await db.getConnection();
+        const data = await conn.query("SELECT * FROM itinerary i INNER JOIN trip_preference tp on i.preference = tp.id WHERE tp.date < current_date AND tp.userid = (?)", [req.payload._id]);
+            res.status(200).send(data);
+    } catch (err) {
+        res.status(409).send(err);
+    } finally {
+        if (conn) return conn.end();
+    }
+}
+
+itineraryService.addSharedTrip = async (req, res) => {
+    let conn;
+    try {
+        conn = await db.getConnection();
+        const data = await conn.query("INSERT INTO shared_trips (user, preference) value (?,?)",
+            [req.payload._id, req.body.preference]);
+            res.status(200).send(data);
+    } catch (err) {
+        res.status(409).send(err);
+    } finally {
+        if (conn) return conn.end();
+    }
+}
+
+itineraryService.getSharedTrips = async (req, res) => {
+    let conn;
+    try {
+        conn = await db.getConnection();
+        const data = await conn.query("SELECT * FROM shared_trips s INNER JOIN trip_preference p on s.preference = p.id");
+            res.status(200).send(data);
+    } catch (err) {
         res.status(409).send(err);
     } finally {
         if (conn) return conn.end();
