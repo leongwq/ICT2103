@@ -30,12 +30,26 @@ itineraryService.getItineraryByPreference = async (req, res) => {
     }
 }
 
+itineraryService.getAllTrips = async (req, res) => {
+    // SQL Statement to check trip preference before current date. Then return all
+    let conn;
+    try {
+        conn = await db.getConnection();
+        const data = await conn.query("SELECT * FROM trip_preference WHERE date >= current_date AND userid = (?)", [req.payload._id]);
+            res.status(200).send(data);
+    } catch (err) {
+        res.status(409).send(err);
+    } finally {
+        if (conn) return conn.end();
+    }
+}
+
 itineraryService.getTripHistory = async (req, res) => {
     // SQL Statement to check trip preference before current date. Then return all
     let conn;
     try {
         conn = await db.getConnection();
-        const data = await conn.query("SELECT * FROM itinerary i INNER JOIN trip_preference tp on i.preference = tp.id WHERE tp.date < current_date AND tp.userid = (?)", [req.payload._id]);
+        const data = await conn.query("SELECT * FROM trip_preference WHERE date < current_date AND userid = (?)", [req.payload._id]);
             res.status(200).send(data);
     } catch (err) {
         res.status(409).send(err);
