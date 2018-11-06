@@ -1,49 +1,39 @@
 const crypto = require('crypto');
 let userService = {};
 
-const db = require('../connections/mariadb');
+const MongoDB = require('../../connections/mongodb')
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 
 userService.addUser = async (req, res) => {
-    let conn;
     const salt = crypto.randomBytes(16).toString('hex');
     const hash = crypto.pbkdf2Sync(req.body.password, salt, 1000, 64, 'sha512').toString('hex');
 
-    // Validation 
-    // req.checkBody('name', 'Name is required').notEmpty();
-    // req.checkBody('email', 'Email is required').notEmpty();
-
-    // const errors = req.validationErrors();
-
     try {
-        conn = await db.getConnection();
-        const data = await conn.query("INSERT INTO users (name, email, contact_no, dob, gender, salt, password) value (?,?,?,?,?,?,?)",
-            [req.body.name, req.body.email, req.body.contact_no, req.body.dob, req.body.gender, salt, hash]);
-        const token = generateJWT(data.insertId, req.body.email, req.body.name);
+        const collection = MongoDB.db.collection('users');
+        const data = await collection.insertOne({'name': req.body.name, 'email': req.body.email, 'contact_no': req.body.contact_no,
+        'dob':req.body.dob, 'gender': req.body.gender, 'salt': salt, 'password': hash});
+        const token = generateJWT(data.insertedId, req.body.email, req.body.name);
         res.status(200);
         res.json({
             "token": token
         });
     } catch (err) {
         res.status(409).send(err);
-    } finally {
-        if (conn) return conn.end();
     }
 }
 
 userService.login = async (req, res) => {
-    // Hands over control to config/passport.js
-    passport.authenticate('sql', function (err, user, info) {
+    // Hands over control to config/passport_mongo.js
+    passport.authenticate('mongo', function (err, user, info) {
         // If Passport throws/catches an error
         if (err) {
-            console.log(err);
             res.status(404).json(err);
             return;
         }
         // If a user is found
         if (user) {
-            const token = generateJWT(user[0].id, user[0].email, user[0].name);
+            const token = generateJWT(user._id, user.email, user.name);
             res.status(200);
             res.json({
                 "token": token
@@ -56,10 +46,9 @@ userService.login = async (req, res) => {
 }
 
 userService.getUser = async (req, res) => {
-    let conn;
     try {
-        conn = await db.getConnection();
-        const data = await conn.query("SELECT * FROM users WHERE id = (?)", [req.params.id]);
+        const collection = MongoDB.db.collection('users');
+        const data = await collection.findOne({'_id': req.params.id});
         res.status(200).send(data);
     } catch (err) {
         console.log(err);

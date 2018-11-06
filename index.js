@@ -7,6 +7,10 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const helmet = require('helmet');
 const expressValidator = require('express-validator');
+const MongoDB = require('./connections/mongodb');
+
+// Conect to MongoDB
+MongoDB.connectToMongo();
 
 // Set up passport local strategy 
 require('./config/passport');
