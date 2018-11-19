@@ -23,7 +23,7 @@ router.use('/v1/itinerary', itinerary);
 // MongoDB
 router.use('/v1/mongo/user', mongoUser);
 router.use('/v1/mongo/activity', mongoActivity);
-router.use('/v1/mongo/itinerary', mongoItinerary);
+//router.use('/v1/mongo/itinerary', mongoItinerary);
 router.use('/v1/mongo/preference', mongoPreference);
 
 module.exports = router;
