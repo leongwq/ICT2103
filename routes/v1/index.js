@@ -7,7 +7,7 @@ const itinerary = require('./itinerary');
 
 const mongoUser = require('./mongo/user');
 const mongoActivity = require('./mongo/activity');
-const mongoItinerary = require('./mongo/itinerary');
+//const mongoItinerary = require('./mongo/itinerary');
 const mongoPreference = require('./mongo/preference');
 
 router.get('/', (req, res) => {
