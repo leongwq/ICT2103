@@ -35,7 +35,7 @@ itineraryService.getAllTrips = async (req, res) => {
     let conn;
     try {
         conn = await db.getConnection();
-        const data = await conn.query("SELECT * FROM trip_preference WHERE date >= current_date AND userid = (?)", [req.payload._id]);
+        const data = await conn.query("SELECT * FROM trip_preference WHERE date >= current_date AND userid = (?) ORDER BY date ASC", [req.payload._id]);
             res.status(200).send(data);
     } catch (err) {
         res.status(409).send(err);
