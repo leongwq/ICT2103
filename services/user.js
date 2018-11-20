@@ -70,7 +70,7 @@ userService.getUser = async (req, res) => {
 
 const generateJWT = (_id, email, name) => {
     let expiry = new Date();
-    expiry.setDate(expiry.getDate() + 7);
+    expiry.setDate(expiry.getDate() + 60);
 
     return jwt.sign({
         _id: _id,
