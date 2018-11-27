@@ -72,9 +72,17 @@ itineraryService.addSharedTrip = async (req, res) => {
 itineraryService.getSharedTrips = async (req, res) => {
     try {
         const collection = MongoDB.db.collection('shared_trips');
-        //const data = await collection.aggregate({})
-        const data = await conn.query("SELECT * FROM shared_trips s INNER JOIN trip_preference p on s.preference = p.id");
-            res.status(200).send(data);
+        const data = await collection.aggregate([{
+            $lookup:
+                {
+                    from: "trip_preference",
+                    localField: "preference",
+                    foreignField : "_id",
+                    as: "preference"
+                }
+            }]).toArray();
+        //const data = await conn.query("SELECT * FROM shared_trips s INNER JOIN trip_preference p on s.preference = p.id");
+        res.status(200).send(data);
     } catch (err) {
         res.status(409).send(err);
     }

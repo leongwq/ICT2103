@@ -37,7 +37,13 @@ preferenceService.changeDateByID = async (req, res) => {
 preferenceService.deletePreferenceByID = async (req, res) => {
     try {
         const collection = MongoDB.db.collection('trip_preference');
-        const data = await collection.deleteOne({'_id': ObjectID(req.params.id), 'userid': ObjectID(req.payload._id)});
+        await collection.deleteOne({'_id': ObjectID(req.params.id), 'userid': ObjectID(req.payload._id)});
+        // Find related shared trips and delete
+        const STcollection = MongoDB.db.collection('shared_trips');
+        await STcollection.deleteMany({ preference : ObjectID(req.params.id) })
+        // Find related itinerary and delete
+        const Icollection = MongoDB.db.collection('shared_trips');
+        const data = await Icollection.deleteMany({ preference : ObjectID(req.params.id) })
         res.status(200).send(data);
     } catch (err) {
         res.status(409).send(err);
