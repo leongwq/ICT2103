@@ -21,7 +21,7 @@ preferenceService.getPreferenceByID = async (req, res) => {
     try {
         conn = await db.getConnection();
         const data = await conn.query("SELECT * FROM trip_preference WHERE id = (?)", [req.params.id]);
-            res.status(200).send(data);
+        res.status(200).send(data);
     } catch (err) {
         res.status(409).send(err);
     } finally {

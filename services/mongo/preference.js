@@ -7,7 +7,7 @@ preferenceService.addPreference = async (req, res) => {
     try {
         const collection = MongoDB.db.collection('trip_preference');
         const data = await collection.insertOne({'userid': ObjectID(req.payload._id), 'budget': req.body.budget, 'intensity': req.body.intensity,
-        'type': req.body.type, 'fullday': req.body.fullday, 'pax': req.body.pax, 'date': req.body.date});
+        'type': req.body.type, 'fullday': req.body.fullday, 'pax': req.body.pax, 'date': new Date(req.body.date)});
         res.status(200).send(data);
     } catch (err) {
         res.status(409).send(err);
