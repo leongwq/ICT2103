@@ -27,7 +27,7 @@ preferenceService.getPreferenceByID = async (req, res) => {
 preferenceService.changeDateByID = async (req, res) => {
     try {
         const collection = MongoDB.db.collection('trip_preference');
-        const data = await collection.updateOne({'_id': ObjectID(req.body.id), 'userid': ObjectID(req.payload._id)},{$set: {'date': req.body.date}});
+        const data = await collection.updateOne({'_id': ObjectID(req.body.id), 'userid': ObjectID(req.payload._id)},{$set: {'date': new Date(req.body.date)}});
         res.status(200).send(data);
     } catch (err) {
         res.status(409).send(err);
